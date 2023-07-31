@@ -29,7 +29,6 @@ public class BorrowController {
     final String GENERIC_ERROR = "Error Encountered";
 
 
-
     //Input book ids and student id. The output should return a list of which books are successfully borrowed and
     //which ones failed due to unavailability or any other reason.
     @GetMapping("/borrow")
@@ -88,11 +87,13 @@ public class BorrowController {
     private void updateBookAvailability(Book book, Long studentId) {
         book.setAvailable(false);
         book.setBorrowerId(studentId);
+        //UPDATE book SET available = false, borrower_id = studentId WHERE book_id = book.getBookId()
         bookRepository.save(book);
     }
 
     //Check if student exists in the DB
     private boolean studentIsValid(Long studentId) {
+        //SELECT TOP 1 * FROM student WHERE student_id = studentId
         return studentRepository.findById(studentId).isEmpty();
     }
 
@@ -100,6 +101,7 @@ public class BorrowController {
     private Book getBookForId(Integer id) {
         //Try to get book for Id
         Long longId = id.longValue();
+        //SELECT TOP 1 * FROM book WHERE book_id = longId
         Optional<Book> book = bookRepository.findById(longId);
 
         return book.isPresent() ?

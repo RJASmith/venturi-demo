@@ -33,11 +33,17 @@ public class AuthorController {
         Author author;
         List<Book> books = new ArrayList<>();
         //get the author
+        //SELECT * FROM author WHERE authord_id = authorId
         Optional<Author> optionalAuthor = authorRepository.findById(authorId.longValue());
 
         //If no author returned, return an exception state
         if (optionalAuthor.isPresent()) {
             author = optionalAuthor.get();
+
+            //What would have been used here if not using JPA query and its funky table linking shenanigans
+            //SELECT * FROM book b
+            //LEFT JOIN book_author ba ON ba.book_id = b.book_id
+            //WHERE ba.author_id = author
             books = bookRepository.findByBookAuthors(author);
         } else {
             Book emptyBook = new Book();
